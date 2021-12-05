@@ -9,30 +9,32 @@ defmodule AdventOfCode.Day02 do
     end)
   end
 
-  def calculate_step({x, y}, {"forward", steps}) do
-    {x + steps, y}
+  def calculate_step({horizontal, depth, depth_aim}, {"forward", steps}) do
+    {horizontal + steps, depth, depth_aim + depth * steps}
   end
 
-  def calculate_step({x, y}, {"up", steps}) do
-    {x, y + steps}
+  def calculate_step({horizontal, depth, depth_aim}, {"up", steps}) do
+    {horizontal, depth - steps, depth_aim}
   end
 
-  def calculate_step({x, y}, {"down", steps}) do
-    {x, y - steps}
+  def calculate_step({horizontal, depth, depth_aim}, {"down", steps}) do
+    {horizontal, depth + steps, depth_aim}
   end
 
   def calculate_position(instructions) do
     instructions
-    |> Enum.reduce({0, 0}, fn instruction, position ->
+    |> Enum.reduce({0, 0, 0}, fn instruction, position ->
       calculate_step(position, instruction)
     end)
   end
 
   def part1(args) do
-    {x, y} = args |> get_parsed_instructions() |> calculate_position()
-    abs(x) * abs(y)
+    {horizontal, depth, _} = args |> get_parsed_instructions() |> calculate_position()
+    abs(horizontal * depth)
   end
 
   def part2(args) do
+    {horizontal, depth, depth_aim} = args |> get_parsed_instructions() |> calculate_position()
+    abs(horizontal * depth_aim)
   end
 end
